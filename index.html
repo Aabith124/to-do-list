@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="todo-list.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  </head>
+  <body>
+    <div class="app-container">
+      <div class="app-header">
+        <h1 class="app-title">
+          <i class="fas fa-check-circle"></i> Todo List
+        </h1>
+        <div class="todo-stats js-todo-stats"></div>
+      </div>
+
+      <div class="todo-input-grid">
+        <input placeholder="What needs to be done?"
+          class="js-name-input name-input" 
+          aria-label="Todo name">
+        <input type="date"
+          class="js-due-date-input due-date-input"
+          aria-label="Due date">
+        <button class="add-todo-button js-add-todo-button">
+          <i class="fas fa-plus"></i> Add Task
+        </button>
+      </div>
+
+      <div class="js-todo-list todo-grid"></div>
+      
+      <div class="empty-state js-empty-state" style="display: none;">
+        <p>No tasks yet. Add a new task to get started!</p>
+      </div>
+      
+      <div class="todo-actions">
+        <button class="clear-all-button js-clear-all-button">Clear All</button>
+      </div>
+    </div>
+
+    <script src="todo-list.js"></script>
+  </body>
+</html>
