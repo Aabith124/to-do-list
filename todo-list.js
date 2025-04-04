@@ -19,17 +19,37 @@ function renderTodoList() {
   
   document.querySelector('.js-empty-state').style.display = 'none';
 
+  // Check if we're on mobile
+  const isMobile = window.innerWidth <= 600;
+
   todoList.forEach((todoObject, index) => {
     const { name, dueDate } = todoObject;
-    const html = `
-      <div class="todo-item" data-index="${index}">
-        <div class="todo-name">${name}</div>
-        <div class="todo-date">${formatDate(dueDate)}</div>
-        <button class="delete-todo-button js-delete-todo-button" aria-label="Delete task">
-          <i class="fas fa-trash-alt"></i>
-        </button> 
-      </div>
-    `;
+    
+    // Different HTML structure based on screen size
+    let html;
+    
+    if (isMobile) {
+      html = `
+        <div class="todo-item" data-index="${index}">
+          <div class="todo-name">${name}</div>
+          <div class="todo-date">${formatDate(dueDate)}</div>
+          <button class="delete-todo-button js-delete-todo-button" aria-label="Delete task">
+            <i class="fas fa-trash-alt"></i> Delete
+          </button> 
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="todo-item" data-index="${index}">
+          <div class="todo-name">${name}</div>
+          <div class="todo-date">${formatDate(dueDate)}</div>
+          <button class="delete-todo-button js-delete-todo-button" aria-label="Delete task">
+            <i class="fas fa-trash-alt"></i>
+          </button> 
+        </div>
+      `;
+    }
+    
     todoListHTML += html;
   });
 
@@ -55,10 +75,21 @@ function renderTodoList() {
     });
 }
 
+// Re-render on resize to handle mobile/desktop layout changes
+window.addEventListener('resize', () => {
+  renderTodoList();
+});
+
 function formatDate(dateString) {
   if (!dateString) return 'No date';
   
-  const options = { weekday: 'short', month: 'short', day: 'numeric' };
+  const options = { month: 'short', day: 'numeric' };
+  
+  // If not mobile, add the weekday
+  if (window.innerWidth > 600) {
+    options.weekday = 'short';
+  }
+  
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', options);
 }
@@ -100,8 +131,11 @@ function addTodo() {
   if (!name) {
     // Highlight the input field if empty
     inputElement.style.borderColor = '#e63946';
+    inputElement.classList.add('shake');
+    
     setTimeout(() => {
       inputElement.style.borderColor = '';
+      inputElement.classList.remove('shake');
     }, 1000);
     return;
   }
@@ -126,3 +160,18 @@ function addTodo() {
   renderTodoList();
   updateStats();
 }
+
+// Add shake animation class
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+  }
+  
+  .shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  }
+`;
+document.head.appendChild(style);
